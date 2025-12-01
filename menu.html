@@ -16,9 +16,12 @@
     }
     .menu-section::before {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0; 
+      left: 0;
+      width: 100%; 
+      height: 100%;
       z-index: 3;
+      pointer-events: none;
     }
     .menu-section .container {
       position: relative;
@@ -26,7 +29,7 @@
     }
     .card-body .btn {
       margin-bottom: 0.5rem;
-      background-color: yellow: 
+      background-color: #f5db35; 
     }
   </style>
 </head>
@@ -104,11 +107,14 @@
     const cartListModal = document.getElementById("cart-list-modal");
     const totalPriceEl = document.getElementById("total-price");
     const totalPriceModal = document.getElementById("total-price-modal");
+    
     let total = 0;
+    let cart = [];
 
     products.forEach((product, index) => {
       const card = document.createElement("div");
       card.className = "col-md-3 mb-4";
+
       card.innerHTML = `
         <div class="card shadow-sm h-100">
           <img src="${product.image}" class="card-img-top" />
@@ -125,23 +131,52 @@
       menuContainer.appendChild(card);
     });
 
-    function addToCart(index) {
-      const item = products[index];
+function addToCart(index) {
+  const item = products[index];
+  let exists = false;
 
-      
-      const li = document.createElement("li");
-      li.className = "list-group-item d-flex justify-content-between";
-      li.textContent = item.name + " - ₱" + item.price;
-      cartList.appendChild(li);
-
-      
-      const liModal = li.cloneNode(true);
-      cartListModal.appendChild(liModal);
-
-      total += item.price;
-      totalPriceEl.textContent = total;
-      totalPriceModal.textContent = total;
+  // Check if item already in cart
+  for (let i = 0; i < cart.length; i++) {
+    if (cart[i].name === item.name) {
+      cart[i].qty++;
+      exists = true;
+      break;
     }
+  }
+
+  if (!exists) {
+    cart.push({ name: item.name, price: item.price, qty: 1 });
+  }
+
+  function updateCart() {
+  cartList.innerHTML = "";
+  cartListModal.innerHTML = "";
+  total = 0;
+
+  cart.forEach(item => {
+    total += item.price * item.qty;
+
+    const row = `
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>${item.name} - ₱${item.price} x ${item.qty}</span>
+      </li>
+    `;
+
+    cartList.innerHTML += row;
+    cartListModal.innerHTML += row;
+  });
+
+  totalPriceEl.textContent = total;
+  totalPriceModal.textContent = total;
+}
+
+  updateCart();
+
+  // Show the modal
+  var cartModalEl = document.getElementById('cartModal');
+  var cartModal = new bootstrap.Modal(cartModalEl);
+  cartModal.show();
+}
   </script>
 </body>
 </html>
