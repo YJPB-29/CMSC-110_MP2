@@ -47,6 +47,11 @@
         box-shadow: none;
     }
 
+  
+  #about {
+    scroll-margin-top: 80px; 
+  }
+
 
   .hero {
     position: relative;
