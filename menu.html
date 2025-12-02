@@ -29,7 +29,7 @@
     }
     .card-body .btn {
       margin-bottom: 0.5rem;
-      background-color: #f5db35; 
+      background-color: #efd528; 
     }
   </style>
 </head>
@@ -111,9 +111,10 @@
     let total = 0;
     let cart = [];
 
+    //Function to create and display the items
     products.forEach((product, index) => {
       const card = document.createElement("div");
-      card.className = "col-md-3 mb-4";
+      card.className = "col-md-3 mb-4"; 
 
       card.innerHTML = `
         <div class="card shadow-sm h-100">
@@ -131,11 +132,12 @@
       menuContainer.appendChild(card);
     });
 
+//Function for adding to cart 
 function addToCart(index) {
   const item = products[index];
   let exists = false;
 
-  // Check if item already in cart
+  // Check if item already in cart and adds the quantity
   for (let i = 0; i < cart.length; i++) {
     if (cart[i].name === item.name) {
       cart[i].qty++;
@@ -144,15 +146,18 @@ function addToCart(index) {
     }
   }
 
+  //adds the new entry to cart if it doesn't exist
   if (!exists) {
     cart.push({ name: item.name, price: item.price, qty: 1 });
   }
 
   function updateCart() {
+  //Clears cart
   cartList.innerHTML = "";
   cartListModal.innerHTML = "";
   total = 0;
 
+  //Updates the new cart
   cart.forEach(item => {
     total += item.price * item.qty;
 
@@ -161,11 +166,12 @@ function addToCart(index) {
         <span>${item.name} - ₱${item.price} x ${item.qty}</span>
       </li>
     `;
-
+  
     cartList.innerHTML += row;
     cartListModal.innerHTML += row;
   });
 
+  //Updates the total price 
   totalPriceEl.textContent = total;
   totalPriceModal.textContent = total;
 }
